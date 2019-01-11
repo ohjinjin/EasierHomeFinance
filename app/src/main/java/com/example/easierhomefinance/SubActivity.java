@@ -2,6 +2,7 @@ package com.example.easierhomefinance;
 
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AlertDialog;
@@ -21,12 +22,44 @@ public class SubActivity extends AppCompatActivity implements View.OnClickListen
     private FloatingActionButton fab, fab1, fab2,fab3;
     private TextView txt1,txt2,txt3;
 
+    private DBHelper mydb;
+    TextView amount;
+    TextView balance;
+    int id = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_sub);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        amount = (TextView)findViewById(R.id.amount);
+        balance = (TextView)findViewById(R.id.balance);
+
+        mydb = new DBHelper(this);
+
+        Cursor rs = mydb.getData(1);    /////////////////////////////////////
+        rs.moveToFirst();
+        String n = rs.getString(rs.getColumnIndex(DBHelper.HF_COLUMN_AMOUNT));
+
+        if (rs.getInt(rs.getColumnIndex(DBHelper.HF_COLUMN_INCOME))==1) {
+            //Log.e(this.getClass().getName(),"testttttttttttttttttttttttttttttttttttttt1");
+            amount.setText("+"+(CharSequence) n);
+        }
+        else if (rs.getInt(rs.getColumnIndex(DBHelper.HF_COLUMN_EXPENSE))==1) {
+            //Log.e(this.getClass().getName(),"testttttttttttttttttttttttttttttttttttttt2");
+            amount.setText("-"+(CharSequence) n);
+        }
+        else{
+            //Log.e(this.getClass().getName(),"testttttttttttttttttttttttttttttttttttttt3");
+            amount.setText((CharSequence) n);
+        }
+
+        if (!rs.isClosed()){
+            //Log.e(this.getClass().getName(),"testttttttttttttttttttttttttttttttttttttt4");
+            rs.close();
+        }
 
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
