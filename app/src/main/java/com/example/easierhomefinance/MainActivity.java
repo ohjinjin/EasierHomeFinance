@@ -7,7 +7,10 @@ import android.util.Log;
 import android.view.View;
 import android.widget.*;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -24,7 +27,9 @@ public class MainActivity extends AppCompatActivity {
 
         //임의로 데이터 삽입
         mydb.deleteHistory(1);
-        mydb.insertHistory("20190111", 1, 0, 0, "5000");
+        mydb.deleteHistory(2);
+        mydb.deleteHistory(3);
+        mydb.insertHistory("20190111", 1, 0, 0, 5000);
 
         ArrayList arrayList = mydb.getAllHistory();
 
@@ -43,6 +48,12 @@ public class MainActivity extends AppCompatActivity {
         });
 
 
-
+        /*
+        final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        final DateFormat dateFormat_year = new SimpleDateFormat("yyyy");
+        final DateFormat dateFormat_month = new SimpleDateFormat("MM");
+        final DateFormat dateFormat_day = new SimpleDateFormat("dd");
+        Calendar cal = Calendar.getInstance();
+        Log.e(this.getClass().getName(),"testttttttttttttttttttttttttttttttttttttt1"+dateFormat.format(cal.getTime())+" "+dateFormat_year.format(cal.getTime())+" "+dateFormat_month.format(cal.getTime())+" "+dateFormat_day.format(cal.getTime()));*/
     }
 }

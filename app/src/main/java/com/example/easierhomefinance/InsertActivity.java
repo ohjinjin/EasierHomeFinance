@@ -6,6 +6,7 @@ import android.graphics.Color;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Adapter;
@@ -67,7 +68,7 @@ public class InsertActivity extends AppCompatActivity implements View.OnClickLis
 
     }
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         new AlertDialog.Builder(this)
                 .setTitle("저장 확인 창")
                 .setMessage("정말로 저장하시겠습니까?")
@@ -75,8 +76,8 @@ public class InsertActivity extends AppCompatActivity implements View.OnClickLis
                 .setPositiveButton(android.R.string.yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         // 확인시 처리 로직
-                        //insert(this);///////////////////////////////////////////////////////////////////////////////////////////////
-                        Toast.makeText(InsertActivity.this, "저장을 완료했습니다.", Toast.LENGTH_SHORT).show();
+                        insert(v);///////////////////////////////////////////////////////////////////////////////////////////////
+                        //Toast.makeText(InsertActivity.this, "저장을 완료했습니다.", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 })
@@ -115,12 +116,17 @@ public class InsertActivity extends AppCompatActivity implements View.OnClickLis
             }
         }
         else{*/
-        //if (mydb.insertHistory(date.getText().toString(),income.isChecked(),expense.isChecked(),save.isChecked(),amount.getText().toString())){
-        //    Toast.makeText(getApplicationContext(),"추가되었음",Toast.LENGTH_SHORT).show();
-        //}
-        //else{
-        //    Toast.makeText(getApplicationContext(),"추가되지 않았음",Toast.LENGTH_SHORT).show();
-        //}
+        int tmp1 = income.isChecked()?1:0;
+        int tmp2 = expense.isChecked()?1:0;
+        int tmp3 = save.isChecked()?1:0;
+
+        //Log.e(this.getClass().getName(),"testttttttttttttttttttttttttttttttttttttt44"+s1+s2);//+(date.getText().toString())+" bools : "+tmp1+" "+tmp2+" "+ tmp3+" "+Integer.parseInt(amount.getText().toString()));
+        if (mydb.insertHistory(date.getText().toString(),tmp1,tmp2,tmp3,Integer.parseInt(amount.getText().toString()))){
+            Toast.makeText(getApplicationContext(),"저장되었습니다.",Toast.LENGTH_SHORT).show();
+        }
+        else{
+            Toast.makeText(getApplicationContext(),"저장되지 않았습니다.",Toast.LENGTH_SHORT).show();
+        }
         finish();
     }
 

@@ -9,7 +9,7 @@
     tools:showIn="@layout/activity_sub">
 
     <CalendarView
-        android:id="@+id/calendarView2"
+        android:id="@+id/calendarView"
         android:layout_width="385dp"
         android:layout_height="364dp"
         android:layout_marginStart="8dp"

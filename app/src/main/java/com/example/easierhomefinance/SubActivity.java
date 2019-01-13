@@ -12,8 +12,12 @@ import android.util.Log;
 import android.view.View;
 import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
+import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 
 public class SubActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -38,28 +42,30 @@ public class SubActivity extends AppCompatActivity implements View.OnClickListen
         balance = (TextView)findViewById(R.id.balance);
 
         mydb = new DBHelper(this);
+        Toast.makeText(SubActivity.this, ""+mydb.numberOfRows(), Toast.LENGTH_SHORT).show();
 
-        Cursor rs = mydb.getData(1);    /////////////////////////////////////
-        rs.moveToFirst();
-        String n = rs.getString(rs.getColumnIndex(DBHelper.HF_COLUMN_AMOUNT));
+        for (int i=0; i < mydb.numberOfRows(); i++) {
+            Cursor rs = mydb.getDatabyid(i+1);    /////////////////////////////////////
+            rs.moveToFirst();
+            String n = rs.getString(rs.getColumnIndex(DBHelper.HF_COLUMN_AMOUNT));
 
-        if (rs.getInt(rs.getColumnIndex(DBHelper.HF_COLUMN_INCOME))==1) {
-            //Log.e(this.getClass().getName(),"testttttttttttttttttttttttttttttttttttttt1");
-            amount.setText("+"+(CharSequence) n);
-        }
-        else if (rs.getInt(rs.getColumnIndex(DBHelper.HF_COLUMN_EXPENSE))==1) {
-            //Log.e(this.getClass().getName(),"testttttttttttttttttttttttttttttttttttttt2");
-            amount.setText("-"+(CharSequence) n);
-        }
-        else{
-            //Log.e(this.getClass().getName(),"testttttttttttttttttttttttttttttttttttttt3");
-            amount.setText((CharSequence) n);
+            if (rs.getInt(rs.getColumnIndex(DBHelper.HF_COLUMN_INCOME)) == 1) {
+                //Log.e(this.getClass().getName(),"testttttttttttttttttttttttttttttttttttttt1");
+                amount.setText("+" + (CharSequence) n);
+            } else if (rs.getInt(rs.getColumnIndex(DBHelper.HF_COLUMN_EXPENSE)) == 1) {
+                //Log.e(this.getClass().getName(),"testttttttttttttttttttttttttttttttttttttt2");
+                amount.setText("-" + (CharSequence) n);
+            } else {
+                //Log.e(this.getClass().getName(),"testttttttttttttttttttttttttttttttttttttt3");
+                amount.setText((CharSequence) n);
+            }
+
+            if (!rs.isClosed()) {
+                //Log.e(this.getClass().getName(),"testttttttttttttttttttttttttttttttttttttt4");
+                rs.close();
+            }
         }
 
-        if (!rs.isClosed()){
-            //Log.e(this.getClass().getName(),"testttttttttttttttttttttttttttttttttttttt4");
-            rs.close();
-        }
 
         fab_open = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_open);
         fab_close = AnimationUtils.loadAnimation(getApplicationContext(), R.anim.fab_close);
@@ -81,6 +87,24 @@ public class SubActivity extends AppCompatActivity implements View.OnClickListen
         Log.i(this.getClass().getName(),"testttttttttttttt");
         Log.w(this.getClass().getName(),"testttttttttttttt");Log.e(this.getClass().getName(),"testttttttttttttttttttttttttttttttttttttt");
 */
+        // 선택된 날짜얻어오기~~~->날짜 변경 이벤트가 있을때마다 이거 실행되도록 구현해보자ok
+        final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+        CalendarView calendar = (CalendarView) findViewById(R.id.calendarView);
+        //calendar.getDate();
+        //Log.e(this.getClass().getName(),"testttttttttttttttttttttttttttttttttttttt1"+dateFormat.format(calendar.getDate()));
+        calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+            @Override
+            public void onSelectedDayChange(CalendarView view, int year, int month,int dayOfMonth) {
+                String date = String.format("%04d",year)+String.format("%02d",month+1)+String.format("%02d",dayOfMonth);
+                Bundle bundle = new Bundle();
+                bundle.putString("date",date);
+                Intent intent = new Intent(getApplicationContext(),ListActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                Toast.makeText(SubActivity.this, date, Toast.LENGTH_SHORT).show();
+                //intent로 상세내역페이지 만들어줄거야~~
+            }
+        });
 
 
     }
