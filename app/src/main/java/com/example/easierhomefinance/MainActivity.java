@@ -16,12 +16,15 @@ public class MainActivity extends AppCompatActivity {
 
     private ListView myListView;
     DBHelper mydb;
+    Singleton singleton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         //Log.d("ACTIVITY_LC","onCreate 호출됨");
+
+        singleton = Singleton.getInstance();
 
         mydb = new DBHelper(this);
 
@@ -31,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
         mydb.deleteHistory(3);
         mydb.insertHistory("20190111", 1, 0, 0, 5000);
 
-        ArrayList arrayList = mydb.getAllHistory();
+        //ArrayList arrayList = mydb.getAllHistory();
 
         Button button = (Button)findViewById(R.id.newActivity);
         button.setOnClickListener(new View.OnClickListener(){

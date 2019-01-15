@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class SubActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -29,6 +30,7 @@ public class SubActivity extends AppCompatActivity implements View.OnClickListen
     private DBHelper mydb;
     TextView amount;
     TextView balance;
+    Singleton singleton;
     int id = 0;
 
     @Override
@@ -37,6 +39,9 @@ public class SubActivity extends AppCompatActivity implements View.OnClickListen
         setContentView(R.layout.activity_sub);
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+
+        singleton = Singleton.getInstance();
+        singleton.total = new Total(this,"");
 
         amount = (TextView)findViewById(R.id.amount);
         balance = (TextView)findViewById(R.id.balance);
@@ -90,12 +95,19 @@ public class SubActivity extends AppCompatActivity implements View.OnClickListen
         // 선택된 날짜얻어오기~~~->날짜 변경 이벤트가 있을때마다 이거 실행되도록 구현해보자ok
         final DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
         CalendarView calendar = (CalendarView) findViewById(R.id.calendarView);
-        //calendar.getDate();
+        Date curDate = new Date(calendar.getDate());
+        singleton.monthly = new Total(SubActivity.this,curDate.getYear()+""+curDate.getMonth());    // 월별데이터 생성해주고
         //Log.e(this.getClass().getName(),"testttttttttttttttttttttttttttttttttttttt1"+dateFormat.format(calendar.getDate()));
         calendar.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
             @Override
             public void onSelectedDayChange(CalendarView view, int year, int month,int dayOfMonth) {
+                /*singleton.monthly.getIncome();
+                singleton.monthly.getExpense();
+                singleton.monthly.getSave();
+                singleton.monthly.getBalance();이렇게 수정해서 계산해줄메소드 필요함*/
+
                 String date = String.format("%04d",year)+String.format("%02d",month+1)+String.format("%02d",dayOfMonth);
+                singleton.daily = new Total(SubActivity.this,date); //////////////////일별데이터 생성해주고......여기가 적절한위치일지모르겟슴
                 Bundle bundle = new Bundle();
                 bundle.putString("date",date);
                 Intent intent = new Intent(getApplicationContext(),ListActivity.class);
